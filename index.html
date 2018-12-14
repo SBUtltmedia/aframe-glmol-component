@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello, WebVR! • A-Frame</title>
+    <meta name="description" content="Hello, WebVR! • A-Frame">
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="js/GLmol.js"></script>
+  </head>
+  <body>
+<script>
+
+
+AFRAME.registerComponent('box', {
+  schema: {
+    width: {type: 'number', default: 1},
+    height: {type: 'number', default: 1},
+    depth: {type: 'number', default: 1},
+    color: {type: 'color', default: '#AAA'}
+  },
+
+  /**
+   * Initial creation and setting of the mesh.
+   */
+  init: function () {
+    var data = this.data;
+    var el = this.el;
+
+    // Create geometry.
+
+    var glmol= new GLmol('cid:5761');
+    // Set mesh on entity.
+    el.setObject3D('mesh',  glmol.returnModelGroup() );
+  }
+});
+</script>
+
+
+    <a-scene background="color: #ECECEC">
+    <a-entity box position="1 1 -1"><a-entity>
+    </a-scene>
+  </body>
+</html>
