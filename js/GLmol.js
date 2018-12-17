@@ -99,7 +99,7 @@ var GLmol = ( function() {
 
             var self = this;
 
-            this.scene = null;
+
 
             // which contains modelGroup
             this.modelGroup =  new THREE.Object3D();
@@ -134,9 +134,6 @@ var GLmol = ( function() {
             // UI variables
             this.cq = new THREE.Quaternion(1, 0, 0, 0);
             this.dq = new THREE.Quaternion(1, 0, 0, 0);
-            this.isDragging = false;
-            this.mouseStartX = 0;
-            this.mouseStartY = 0;
             this.currentModelPos = 0;
             this.cz = 0;
 
@@ -234,7 +231,7 @@ var GLmol = ( function() {
             for (var i = 1; i <= atomCount; i++) {
                 var line = lines[offset++];
                 var tokens = line.replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
-                console.log(tokens);
+
                 var atom = {};
                 atom.serial = i;
                 atom.atom = atom.elem = tokens[0];
@@ -475,6 +472,7 @@ var GLmol = ( function() {
                 sphere.position.x = atom.x;
                 sphere.position.y = atom.y;
                 sphere.position.z = atom.z;
+                //console.log(atom.x)
             }
         };
 
@@ -1022,15 +1020,14 @@ var GLmol = ( function() {
 
 
 
-
             if (!from || !to)
                 return;
 
-            var midpoint = new TV3().add(from, to).multiplyScalar(0.5);
+            var midpoint = new TV3().addVectors(from, to).multiplyScalar(0.5);
             var color = new TCo(color);
 
             if (!this.cylinderGeometry) {
-                this.cylinderGeometry = new THREE.CylinderGeometry(1, 1, 1, this.cylinderQuality, 1, !cap);
+                this.cylinderGeometry = new THREE.CylinderGeometry(.1, .1, 1, this.cylinderQuality, 1, !cap);
                 this.cylinderGeometry.faceUvs = [];
                 this.faceVertexUvs = [];
             }
@@ -1038,14 +1035,17 @@ var GLmol = ( function() {
                 color : color.getHex()
             });
             var cylinder = new THREE.Mesh(this.cylinderGeometry, cylinderMaterial);
-            cylinder.position = midpoint;
-            cylinder.lookAt(from);
+
+                     cylinder.position.set(midpoint.x,midpoint.y,midpoint.z);
+           cylinder.lookAt(from);
+            //
             cylinder.updateMatrix();
             cylinder.matrixAutoUpdate = false;
-            var m = new THREE.Matrix4().makeScale(radius, radius, from.distanceTo(to));
-            m.makeRotationX(Math.PI / 2);
-            cylinder.matrix.multiply(m);
+            console.log(     cylinder.matrix)
+        	        cylinder.matrix.multiply(new THREE.Matrix4().makeScale(radius, radius, from.distanceTo(to)).makeRotationX(Math.PI / 2));
+
             group.add(cylinder);
+
         };
 
         // FIXME: transition!
@@ -1734,7 +1734,7 @@ var GLmol = ( function() {
                 var mat = matrices[i];
                 if (mat == undefined || mat.isIdentity())
                     continue;
-                console.log(mat);
+
                 var symmetryMate = THREE.SceneUtils.cloneObject(asu);
                 symmetryMate.matrix = mat;
                 group.add(symmetryMate);
@@ -1782,11 +1782,29 @@ var GLmol = ( function() {
             this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius);
             this.drawMainchainCurve(this.modelGroup, all, this.curveWidth, 'P');
             this.drawCartoon(this.modelGroup, all, this.curveWidth);
+             var boundingBox = new THREE.Box3();
+             boundingBox.setFromObject( this.modelGroup );
+
+            var largestSideLength= Math.max(boundingBox.max.x-boundingBox.min.x,Math.max(boundingBox.max.y-boundingBox.min.y,Math.max(boundingBox.max.z-boundingBox.min.z)))
+  console.log(largestSideLength)
+            this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
+        //   var center = boundingBox.getCenter();
+          //          console.log(center)
+          //   this.modelGroup.translateX(-center.x);
+          //     this.modelGroup.updateMatrix()
+          //   //this.modelGroup.translateY(center.y);
+          //   //  this.modelGroup.updateMatrix()
+          // //  this.modelGroup.translateZ(center.z);
+          // //  this.modelGroup.updateMatrix()
+          //   boundingBox.setFromObject( this.modelGroup );
+          //   var center = boundingBox.getCenter();
+
+          //  console.log(center)
         };
 
         GLmol.prototype.loadMoleculeStr = function(source) {
             var time = new Date();
-            console.log(source)
+
             this.protein = {
                 sheet : [],
                 helix : [],
@@ -1801,14 +1819,14 @@ var GLmol = ( function() {
             this.parsePDB2(source);
             if (!this.parseSDF(source))
                 this.parseXYZ(source);
-            //            console.log("parsed in " + (+new Date() - time) + "ms");
+
 
 
 
             this.defineRepresentation();
 
 
-    
+
         };
 
         // For scripting

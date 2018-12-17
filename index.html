@@ -6,6 +6,7 @@
     <meta name="description" content="Hello, WebVR! • A-Frame">
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
     <script src="js/GLmol.js"></script>
+      <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
   </head>
   <body>
 <script>
@@ -28,7 +29,7 @@ AFRAME.registerComponent('box', {
 
     // Create geometry.
 
-    var glmol= new GLmol('cid:5761');
+    var glmol= new GLmol('pdb:2POR');
     // Set mesh on entity.
     el.setObject3D('mesh',  glmol.returnModelGroup() );
   }
@@ -37,7 +38,7 @@ AFRAME.registerComponent('box', {
 
 
     <a-scene background="color: #ECECEC">
-    <a-entity box position="1 1 -1"><a-entity>
+    <a-entity box> <a-entity camera look-controls orbit-controls="target: 0 0 0; minDistance: 0.5; maxDistance: 1; initialPosition: 0 0 1"></a-entity><a-entity>
     </a-scene>
   </body>
 </html>
