@@ -36,8 +36,8 @@ THREE.Matrix4.prototype.isIdentity = function() {
 };
 
 var GLmol = ( function() {
-        function GLmol(pdbID) {
-                this.create(pdbID);
+        function GLmol(data) {
+                this.create(data);
         }
         GLmol.prototype.returnModelGroup= function(){
 
@@ -47,7 +47,8 @@ var GLmol = ( function() {
 
         }
 
-        GLmol.prototype.create = function(pdbID) {
+        GLmol.prototype.create = function(data) {
+          this.schema=data;
             this.Nucleotides = ['  G', '  A', '  T', '  C', '  U', ' DG', ' DA', ' DT', ' DC', ' DU'];
             this.ElementColors = {
                 "H" : 0xCCCCCC,
@@ -137,7 +138,7 @@ var GLmol = ( function() {
             this.currentModelPos = 0;
             this.cz = 0;
 
-            this.download(pdbID)
+            this.download(this.schema.molId)
 
         }
 
@@ -1041,7 +1042,7 @@ var GLmol = ( function() {
             //
             cylinder.updateMatrix();
             cylinder.matrixAutoUpdate = false;
-            console.log(     cylinder.matrix)
+
         	        cylinder.matrix.multiply(new THREE.Matrix4().makeScale(radius, radius, from.distanceTo(to)).makeRotationX(Math.PI / 2));
 
             group.add(cylinder);
@@ -1772,13 +1773,126 @@ var GLmol = ( function() {
             }
         };
 
+        GLmol.prototype.drawColor = function(colorMode) {
+          var all = this.getAllAtoms();
+          if (colorMode == 'ss') {
+                    this.colorByStructure(all, 0xcc00cc, 0x00cccc);
+                } else if (colorMode == 'chain') {
+                    this.colorByChain(all);
+                } else if (colorMode == 'chainbow') {
+                    this.colorChainbow(all);
+                } else if (colorMode == 'b') {
+                    this.colorByBFactor(all);
+                } else if (colorMode == 'polarity') {
+                    this.colorByPolarity(all, 0xcc0000, 0xcccccc);
+                }
+        }
+
+        GLmol.prototype.drawmainchain =  function(mainchainMode, doNotSmoothen){
+          var asu = new THREE.Object3D();
+          var all = this.getAllAtoms();
+          if (mainchainMode == 'ribbon') {
+                        this.drawCartoon(asu, all, doNotSmoothen);
+                        this.drawCartoonNucleicAcid(asu, all);
+                    } else if (mainchainMode == 'thickRibbon') {
+                        this.drawCartoon(asu, all, doNotSmoothen, this.thickness);
+                        this.drawCartoonNucleicAcid(asu, all, null, this.thickness);
+                    } else if (mainchainMode == 'strand') {
+                        this.drawStrand(asu, all, null, null, null, null, null, doNotSmoothen);
+                        this.drawStrandNucleicAcid(asu, all);
+                    } else if (mainchainMode == 'chain') {
+                        this.drawMainchainCurve(asu, all, this.curveWidth, 'CA', 1);
+                        this.drawMainchainCurve(asu, all, this.curveWidth, 'O3\'', 1);
+                    } else if (mainchainMode == 'cylinderHelix') {
+                        this.drawHelixAsCylinder(asu, all, 1.6);
+                        this.drawCartoonNucleicAcid(asu, all);
+                    } else if (mainchainMode == 'tube') {
+                        this.drawMainchainTube(asu, all, 'CA');
+                        this.drawMainchainTube(asu, all, 'O3\'');
+                        // FIXME: 5' end problem!
+                    } else if (mainchainMode == 'bonds') {
+                        this.drawBondsAsLine(asu, all, this.lineWidth);
+                    }
+        }
+
+        GLmol.prototype.drawBase = function(hetatmMode) {
+          var all = this.getAllAtoms();
+                    if (hetatmMode == 'nuclStick') {
+                        this.drawNucleicAcidStick(this.modelGroup, all);
+                    } else if (hetatmMode == 'nuclLine') {
+                        this.drawNucleicAcidLine(this.modelGroup, all);
+                    } else if (hetatmMode == 'nuclPolygon') {
+                        this.drawNucleicAcidLadder(this.modelGroup, all);
+                    }
+        }
+
+        GLmol.prototype.drawLine = function (line) {
+          if (line == 'checked') {
+            var all = this.getAllAtoms();
+            this.drawBondsAsLine(this.modelGroup, this.getSidechains(all), this.lineWidth);
+          }
+        }
+
+        GLmol.prototype.drawNB = function (nbMode) {
+          if (nbMode == 'nb_sphere') {
+                        this.drawAtomsAsIcosahedron(target, nonBonded, 0.3, true);
+                    } else if (nbMode == 'nb_cross') {
+                        this.drawAsCross(target, nonBonded, 0.3, true);
+                    }
+        };
+
+        GLmol.prototype.drawHETATM = function(hetatmMode) {
+                    var all = this.getAllAtoms();
+                    var hetatm = this.removeSolvents(this.getHetatms(all));
+                    if (hetatmMode == 'stick') {
+                      this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius, true);
+                  } else if (hetatmMode == 'sphere') {
+                      this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius);
+                  } else if (hetatmMode == 'line') {
+                      this.drawBondsAsLine(this.modelGroup, hetatm, this.curveWidth);
+                  } else if (hetatmMode == 'icosahedron') {
+                      this.drawAtomsAsIcosahedron(this.modelGroup, hetatm, this.sphereRadius);
+                  } else if (hetatmMode == 'ballAndStick') {
+                      this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius / 2.0, this.cylinderRadius, true, false, 0.3);
+                  } else if (hetatmMode == 'ballAndStick2') {
+                      this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius / 2.0, this.cylinderRadius, true, true, 0.3);
+                  }
+        }
+
+        GLmol.prototype.drawCell = function (cellMode) {
+          if(cellMode == 'checked'){
+            this.drawUnitcell(this.modelGroup);
+          }
+        }
+        GLmol.prototype.drawBiomt = function (biomtMode) {
+          if(biomtMode == 'checked'){
+            this.drawSymmetryMates2(this.modelGroup, asu, this.protein.biomtMatrices);
+          }
+        }
+        GLmol.prototype.drawPacking = function (packingMode) {
+          if (packingMode == 'checked') {
+            this.drawSymmetryMatesWithTranslation2(this.modelGroup, asu, this.protein.symMat);
+          }
+        }
+        //GLMol.prototype.drawsymopHetatms = function () {
+//
+  //      }
+
         GLmol.prototype.defineRepresentation = function() {
             var all = this.getAllAtoms();
             var hetatm = this.removeSolvents(this.getHetatms(all));
             this.colorByAtom(all, {});
             this.colorByChain(all);
-
-            //this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius/5);
+            this.getChain(all, this.protein.biomtChains);
+            this.drawColor(this.schema.color);
+            this.drawHETATM(this.schema.hetatmMode);
+            this.drawmainchain(this.schema.mainchain, this.schema.doNotSmoothen);
+            this.drawLine(this.schema.line);
+            this.drawBase(this.schema.base);
+            this.drawCell(this.schema.cell);
+            this.drawBiomt(this.schema.biomt);
+            this.drawPacking(this.schema.packing);
+          //  if(this.schema.hetatm=="sphere")this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius/5);
             this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius);
             this.drawMainchainCurve(this.modelGroup, all, this.curveWidth, 'P');
             this.drawCartoon(this.modelGroup, all, this.curveWidth);
@@ -1786,7 +1900,7 @@ var GLmol = ( function() {
              boundingBox.setFromObject( this.modelGroup );
 
             var largestSideLength= Math.max(boundingBox.max.x-boundingBox.min.x,Math.max(boundingBox.max.y-boundingBox.min.y,Math.max(boundingBox.max.z-boundingBox.min.z)))
-  console.log(largestSideLength)
+            console.log(largestSideLength)
             this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
         //   var center = boundingBox.getCenter();
           //          console.log(center)

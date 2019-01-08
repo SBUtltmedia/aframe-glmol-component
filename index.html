@@ -11,12 +11,24 @@
 <script>
 
 
-AFRAME.registerComponent('box', {
+AFRAME.registerComponent('glmol', {
   schema: {
-    width: {type: 'number', default: 1},
-    height: {type: 'number', default: 1},
+    width: {type: 'number', default: 20},
+    height: {type: 'number', default: 20},
     depth: {type: 'number', default: 1},
-    color: {type: 'color', default: '#AAA'}
+    color: {type: 'color', default: '#AAA'},
+    molId: {type: 'string', default: 'pdb:2POR'},
+    hetatmMode: {type: 'string', default: 'sphere'},
+    mainchain: {type: 'string', default: 'thickRibbon'}, //thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds
+    doNotSmoothen: {type: 'string', default: 'checked'}, //checked, unchecked
+    base: {type: 'string', default: 'nuclLine'}, //nuclStick, nuclLine, nuclPolygon
+    line: {type: 'string', default: 'unchecked'}, //checked, unchecked
+    color: {type: 'string', default: 'chainbow'}, //chainbow, chain, ss, b, polarity
+    nb: {type: 'string', default: 'nb_cross'}, //nb_sphere, nb_cross
+    cell: {type: 'string', default: 'unchecked'}, //checked, unchecked
+    biomt: {type: 'string', default: 'unchecked'}, //checked, unchecked
+    packing: {type: 'string', default: 'unchecked'}, //checked, unchecked
+    symopHetatms: {type: 'string', default: 'unchecked'} //checked, unchecked
   },
 
   /**
@@ -28,7 +40,9 @@ AFRAME.registerComponent('box', {
 
     // Create geometry.
 
-    var glmol= new GLmol('pdb:2POR');
+    var glmol= new GLmol(data);
+    //glmol.drawHETATM(data.hetatm);
+    // glmol.defineRepresentation()
     // Set mesh on entity.
     el.setObject3D('mesh',  glmol.returnModelGroup() );
   }
@@ -37,7 +51,7 @@ AFRAME.registerComponent('box', {
 
 
     <a-scene background="color: #ECECEC">
-    <a-entity box> <a-entity camera look-controls orbit-controls="target: 0 0 0; minDistance: 0.5; maxDistance: 1; initialPosition: 0 0 1"></a-entity><a-entity>
+    <a-entity glmol=""> <a-entity camera look-controls orbit-controls="target: 0 0 0; minDistance: 0.5; maxDistance: 1; initialPosition: 0 0 1"></a-entity><a-entity>
     </a-scene>
   </body>
 </html>
