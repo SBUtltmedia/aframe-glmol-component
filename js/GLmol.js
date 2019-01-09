@@ -104,7 +104,6 @@ var GLmol = ( function() {
 
             // which contains modelGroup
             this.modelGroup =  new THREE.Object3D();
-
             this.bgColor = 0x000000;
             this.fov = 20;
             this.fogStart = 0.4;
@@ -464,6 +463,7 @@ var GLmol = ( function() {
                 var sphereMaterial = new THREE.MeshLambertMaterial({
                     color : atom.color
                 });
+                var sphereGeometry = new THREE.SphereGeometry(1, this.sphereQuality, this.sphereQuality);
                 var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
                 group.add(sphere);
                 var r = (!forceDefault && this.vdwRadii[atom.elem] != undefined) ? this.vdwRadii[atom.elem] : defaultRadius;
@@ -737,8 +737,9 @@ var GLmol = ( function() {
             });
             lineMaterial.vertexColors = true;
 
-            var line = new THREE.Line(geo, lineMaterial);
-            line.type = THREE.LineSegments;
+
+            var line = new THREE.LineSegments(geo, lineMaterial);
+          //  line.type = THREE.LineSegments;
             group.add(line);
         };
 
@@ -783,7 +784,7 @@ var GLmol = ( function() {
                 linewidth : this.lineWidth
             });
             lineMaterial.vertexColors = true;
-            var line = new THREE.Line(geo, lineMaterial, THREE.LineSegments);
+            var line = new THREE.LineSegments(geo, lineMaterial);
             group.add(line);
         };
 
@@ -1788,10 +1789,11 @@ var GLmol = ( function() {
                 }
         }
 
-        GLmol.prototype.drawmainchain =  function(mainchainMode, doNotSmoothen){
-          var asu = new THREE.Object3D();
+        GLmol.prototype.drawMainchain =  function(asu, mainchainMode, doNotSmoothen){
+          //var asu = new THREE.Object3D();
           var all = this.getAllAtoms();
-          if (mainchainMode == 'ribbon') {
+          console.log(this);
+                    if (mainchainMode == 'ribbon') {
                         this.drawCartoon(asu, all, doNotSmoothen);
                         this.drawCartoonNucleicAcid(asu, all);
                     } else if (mainchainMode == 'thickRibbon') {
@@ -1833,7 +1835,12 @@ var GLmol = ( function() {
           }
         }
 
-        GLmol.prototype.drawNB = function (nbMode) {
+        GLmol.prototype.drawNB = function (target, nbMode, symopHetatms) {
+          //var asu = new THREE.Object3D();
+          //target = symopHetatms ? asu : this.modelGroup;
+          console.log(nbMode);
+          var allHet = this.getHetatms(this.getAllAtoms());
+          var nonBonded = this.getNonbonded(allHet);
           if (nbMode == 'nb_sphere') {
                         this.drawAtomsAsIcosahedron(target, nonBonded, 0.3, true);
                     } else if (nbMode == 'nb_cross') {
@@ -1860,17 +1867,17 @@ var GLmol = ( function() {
         }
 
         GLmol.prototype.drawCell = function (cellMode) {
-          if(cellMode == 'checked'){
+          if(cellMode){
             this.drawUnitcell(this.modelGroup);
           }
         }
         GLmol.prototype.drawBiomt = function (biomtMode) {
-          if(biomtMode == 'checked'){
+          if(biomtMode){
             this.drawSymmetryMates2(this.modelGroup, asu, this.protein.biomtMatrices);
           }
         }
         GLmol.prototype.drawPacking = function (packingMode) {
-          if (packingMode == 'checked') {
+          if (packingMode) {
             this.drawSymmetryMatesWithTranslation2(this.modelGroup, asu, this.protein.symMat);
           }
         }
@@ -1881,29 +1888,36 @@ var GLmol = ( function() {
         GLmol.prototype.defineRepresentation = function() {
             var all = this.getAllAtoms();
             var hetatm = this.removeSolvents(this.getHetatms(all));
+            var schema = this.schema;
+            console.log(this.schema);
             this.colorByAtom(all, {});
             this.colorByChain(all);
             this.getChain(all, this.protein.biomtChains);
-            this.drawColor(this.schema.color);
-            this.drawHETATM(this.schema.hetatmMode);
-            this.drawmainchain(this.schema.mainchain, this.schema.doNotSmoothen);
-            this.drawLine(this.schema.line);
-            this.drawBase(this.schema.base);
-            this.drawCell(this.schema.cell);
-            this.drawBiomt(this.schema.biomt);
-            this.drawPacking(this.schema.packing);
-          //  if(this.schema.hetatm=="sphere")this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius/5);
-            this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius);
-            this.drawMainchainCurve(this.modelGroup, all, this.curveWidth, 'P');
-            this.drawCartoon(this.modelGroup, all, this.curveWidth);
+            this.drawColor(schema.color);
+            this.drawHETATM(schema.hetatmMode);
+            this.drawMainchain(this.modelGroup, schema.mainchain, schema.doNotSmoothen);
+            this.drawLine(schema.line);
+            this.drawBase(schema.base);
+            this.drawNB(this.modelGroup, schema.nb, schema.symopHetatms);
+            this.drawCell(schema.cell);
+            this.drawBiomt(schema.biomt);
+            this.drawPacking(schema.packing);
+          //  if(schema.hetatm=="sphere")this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius/5);
+            //this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius);
+            //this.drawMainchainCurve(this.modelGroup, all, this.curveWidth, 'P');
+            //this.drawCartoon(this.modelGroup, all, this.curveWidth);
              var boundingBox = new THREE.Box3();
              boundingBox.setFromObject( this.modelGroup );
 
             var largestSideLength= Math.max(boundingBox.max.x-boundingBox.min.x,Math.max(boundingBox.max.y-boundingBox.min.y,Math.max(boundingBox.max.z-boundingBox.min.z)))
-            console.log(largestSideLength)
-            this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
-        //   var center = boundingBox.getCenter();
-          //          console.log(center)
+             console.log(largestSideLength)
+             this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
+             boundingBox.setFromObject( this.modelGroup );
+        var center = boundingBox.getCenter().x;
+                    console.log(center)
+             this.modelGroup.position.x += -(boundingBox.getCenter().x);
+             this.modelGroup.position.y += -(boundingBox.getCenter().y);
+             this.modelGroup.position.z += -(boundingBox.getCenter().z);
           //   this.modelGroup.translateX(-center.x);
           //     this.modelGroup.updateMatrix()
           //   //this.modelGroup.translateY(center.y);

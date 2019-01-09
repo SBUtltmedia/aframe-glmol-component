@@ -18,17 +18,17 @@ AFRAME.registerComponent('glmol', {
     depth: {type: 'number', default: 1},
     color: {type: 'color', default: '#AAA'},
     molId: {type: 'string', default: 'pdb:2POR'},
-    hetatmMode: {type: 'string', default: 'sphere'},
-    mainchain: {type: 'string', default: 'thickRibbon'}, //thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds
-    doNotSmoothen: {type: 'string', default: 'checked'}, //checked, unchecked
+    hetatmMode: {type: 'string', default: ''}, //stick, ballAndStick, ballAndStick2, sphere, icosahedron, line
+    mainchain: {type: 'string', default: 'ribbon'}, //thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds
+    doNotSmoothen: {type: 'boolean', default: false}, //checked, unchecked
     base: {type: 'string', default: 'nuclLine'}, //nuclStick, nuclLine, nuclPolygon
-    line: {type: 'string', default: 'unchecked'}, //checked, unchecked
-    color: {type: 'string', default: 'chainbow'}, //chainbow, chain, ss, b, polarity
-    nb: {type: 'string', default: 'nb_cross'}, //nb_sphere, nb_cross
-    cell: {type: 'string', default: 'unchecked'}, //checked, unchecked
-    biomt: {type: 'string', default: 'unchecked'}, //checked, unchecked
-    packing: {type: 'string', default: 'unchecked'}, //checked, unchecked
-    symopHetatms: {type: 'string', default: 'unchecked'} //checked, unchecked
+    line: {type: 'string', default: ''}, //checked, unchecked
+    color: {type: 'string', default: ''}, //chainbow, chain, ss, b, polarity
+    nb: {type: 'string', default: 'nb_sphere'}, //nb_sphere, nb_cross
+    cell: {type: 'boolean', default: false}, //checked, unchecked
+    biomt: {type: 'boolean', default: true}, //checked, unchecked
+    packing: {type: 'boolean', default: false}, //checked, unchecked
+    symopHetatms: {type: 'boolean', default: true} //checked, unchecked
   },
 
   /**
@@ -44,6 +44,8 @@ AFRAME.registerComponent('glmol', {
     //glmol.drawHETATM(data.hetatm);
     // glmol.defineRepresentation()
     // Set mesh on entity.
+
+
     el.setObject3D('mesh',  glmol.returnModelGroup() );
   }
 });
@@ -51,7 +53,8 @@ AFRAME.registerComponent('glmol', {
 
 
     <a-scene background="color: #ECECEC">
-    <a-entity glmol=""> <a-entity camera look-controls orbit-controls="target: 0 0 0; minDistance: 0.5; maxDistance: 1; initialPosition: 0 0 1"></a-entity><a-entity>
+    <a-entity id="mol" glmol="" position="0.1 0.1 0.1"> </a-entity>
+    <a-entity id="camera" camera look-controls orbit-controls=" minDistance: .75; maxDistance: 1.5; initialPosition: 0 0 5"></a-entity>
     </a-scene>
   </body>
 </html>
