@@ -88,7 +88,7 @@ var GLmol = ( function() {
             this.aaScale = 1;
             // or 2
 
-            this.NEAR = 1, FAR = 800;
+            this.NEAR = 1,   this.FAR = 800;
             this.CAMERA_Z = -150;
 
 
@@ -153,7 +153,7 @@ var GLmol = ( function() {
                     alert("Wrong PDB ID");
                     return;
                 }
-                uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
+              var  uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
             } else if (query.substr(0, 4) == 'cid:') {
                 query = query.substr(4);
                 if (!query.match(/^[1-9]+$/)) {
@@ -261,9 +261,9 @@ var GLmol = ( function() {
             var molID;
 
             var atoms_cnt = 0;
-            lines = str.split("\n");
+            var lines = str.split("\n");
             for (var i = 0; i < lines.length; i++) {
-                line = lines[i].replace(/^\s*/, '');
+                var line = lines[i].replace(/^\s*/, '');
                 // remove indent
                 var recordName = line.substr(0, 6);
                 if (recordName == 'ATOM  ' || recordName == 'HETATM') {
@@ -1873,12 +1873,12 @@ var GLmol = ( function() {
         }
         GLmol.prototype.drawBiomt = function (biomtMode) {
           if(biomtMode){
-            this.drawSymmetryMates2(this.modelGroup, asu, this.protein.biomtMatrices);
+            this.drawSymmetryMates2(this.modelGroup, this.protein.biomtMatrices);
           }
         }
         GLmol.prototype.drawPacking = function (packingMode) {
           if (packingMode) {
-            this.drawSymmetryMatesWithTranslation2(this.modelGroup, asu, this.protein.symMat);
+            this.drawSymmetryMatesWithTranslation2(this.modelGroup, this.protein.symMat);
           }
         }
         //GLMol.prototype.drawsymopHetatms = function () {
@@ -1964,3 +1964,4 @@ var GLmol = ( function() {
 
         return GLmol;
     }());
+    export { GLmol };

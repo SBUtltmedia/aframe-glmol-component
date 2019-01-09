@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>GLMol example</title>
-    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
-   <script src="js/GLmol.js"></script>
-      <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
-  </head>
-  <body>
-<script>
 
+import { GLmol } from 'Lib/GLmol';
+
+
+/* global AFRAME */
+
+if (typeof AFRAME === 'undefined') {
+  throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+ * GLMol  component for A-Frame.
+ */
 AFRAME.registerComponent('glmol', {
   schema: {
     width: {type: 'number', default: 20},
@@ -26,12 +27,17 @@ AFRAME.registerComponent('glmol', {
     nb: {type: 'string', default: 'nb_sphere'}, //nb_sphere, nb_cross
     cell: {type: 'boolean', default: false}, //checked, unchecked
     biomt: {type: 'boolean', default: true}, //checked, unchecked
-    packing: {type: 'boolean', default: false}, //checked, unchecked
+    packing: {type: 'boolean', default: true}, //checked, unchecked
     symopHetatms: {type: 'boolean', default: true} //checked, unchecked
   },
 
   /**
-   * Initial creation and setting of the mesh.
+   * Set if component needs multiple instancing.
+   */
+  multiple: true,
+
+  /**
+   * Called once when component is attached. Generally for initial setup.
    */
   init: function () {
     var data = this.data;
@@ -46,14 +52,34 @@ AFRAME.registerComponent('glmol', {
 
 
     el.setObject3D('mesh',  glmol.returnModelGroup() );
-  }
+  },
+
+  /**
+   * Called when component is attached and when component data changes.
+   * Generally modifies the entity based on the data.
+   */
+  update: function (oldData) { },
+
+  /**
+   * Called when a component is removed (e.g., via removeAttribute).
+   * Generally undoes all modifications to the entity.
+   */
+  remove: function () { },
+
+  /**
+   * Called on each scene tick.
+   */
+  // tick: function (t) { },
+
+  /**
+   * Called when entity pauses.
+   * Use to stop or remove any dynamic or background behavior such as events.
+   */
+  pause: function () { },
+
+  /**
+   * Called when entity resumes.
+   * Use to continue or add any dynamic or background behavior such as events.
+   */
+  play: function () { }
 });
-</script>
-
-
-    <a-scene background="color: #ECECEC">
-    <a-entity id="mol" glmol="" position="0.1 0.1 0.1"> </a-entity>
-    <a-entity id="camera" camera look-controls orbit-controls=" minDistance: .75; maxDistance: 1.5; initialPosition: 0 0 5"></a-entity>
-    </a-scene>
-  </body>
-</html>
