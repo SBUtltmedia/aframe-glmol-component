@@ -1,3 +1,77 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GLmol; });
 /*
 GLmol - Molecular Viewer on WebGL/Javascript (0.47)
 (C) Copyright 2011-2012, biochem_fan
@@ -88,7 +162,7 @@ var GLmol = ( function() {
             this.aaScale = 1;
             // or 2
 
-            this.NEAR = 1, FAR = 800;
+            this.NEAR = 1,   this.FAR = 800;
             this.CAMERA_Z = -150;
 
 
@@ -153,7 +227,7 @@ var GLmol = ( function() {
                     alert("Wrong PDB ID");
                     return;
                 }
-                uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
+              var  uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
             } else if (query.substr(0, 4) == 'cid:') {
                 query = query.substr(4);
                 if (!query.match(/^[1-9]+$/)) {
@@ -261,9 +335,9 @@ var GLmol = ( function() {
             var molID;
 
             var atoms_cnt = 0;
-            lines = str.split("\n");
+            var lines = str.split("\n");
             for (var i = 0; i < lines.length; i++) {
-                line = lines[i].replace(/^\s*/, '');
+                var line = lines[i].replace(/^\s*/, '');
                 // remove indent
                 var recordName = line.substr(0, 6);
                 if (recordName == 'ATOM  ' || recordName == 'HETATM') {
@@ -1725,11 +1799,10 @@ var GLmol = ( function() {
             }
         };
 
-        GLmol.prototype.drawSymmetryMates2 = function(group, matrices) {
-            var symmetryMate = new THREE.Object3D();//was asu
+        GLmol.prototype.drawSymmetryMates2 = function(group, asu, matrices) {
             if (matrices == undefined)
                 return;
-            symmetryMate.matrixAutoUpdate = false;//was asu
+            asu.matrixAutoUpdate = false;
 
             var cnt = 1;
             this.protein.appliedMatrix = new THREE.Matrix4();
@@ -1738,7 +1811,7 @@ var GLmol = ( function() {
                 if (mat == undefined || mat.isIdentity())
                     continue;
 
-                //var symmetryMate = THREE.SceneUtils.cloneObject(asu);
+                var symmetryMate = THREE.SceneUtils.cloneObject(asu);
                 symmetryMate.matrix = mat;
                 group.add(symmetryMate);
                 for (var j = 0; j < 16; j++)
@@ -1830,7 +1903,7 @@ var GLmol = ( function() {
         }
 
         GLmol.prototype.drawLine = function (line) {
-          if (line) {
+          if (line == 'checked') {
             var all = this.getAllAtoms();
             this.drawBondsAsLine(this.modelGroup, this.getSidechains(all), this.lineWidth);
           }
@@ -1879,7 +1952,7 @@ var GLmol = ( function() {
         }
         GLmol.prototype.drawPacking = function (packingMode) {
           if (packingMode) {
-            this.drawSymmetryMatesWithTranslation2(this.modelGroup, asu, this.protein.symMat);
+            this.drawSymmetryMatesWithTranslation2(this.modelGroup, this.protein.symMat);
           }
         }
         //GLMol.prototype.drawsymopHetatms = function () {
@@ -1965,3 +2038,102 @@ var GLmol = ( function() {
 
         return GLmol;
     }());
+    
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Lib_GLmol__ = __webpack_require__(0);
+
+
+
+
+/* global AFRAME */
+
+if (typeof AFRAME === 'undefined') {
+  throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+ * GLMol  component for A-Frame.
+ */
+AFRAME.registerComponent('glmol', {
+  schema: {
+    width: {type: 'number', default: 20},
+    height: {type: 'number', default: 20},
+    depth: {type: 'number', default: 1},
+    color: {type: 'color', default: '#AAA'},
+    molId: {type: 'string', default: 'pdb:2POR'},
+    hetatmMode: {type: 'string', default: ''}, //stick, ballAndStick, ballAndStick2, sphere, icosahedron, line
+    mainchain: {type: 'string', default: 'ribbon'}, //thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds
+    doNotSmoothen: {type: 'boolean', default: false}, //checked, unchecked
+    base: {type: 'string', default: 'nuclLine'}, //nuclStick, nuclLine, nuclPolygon
+    line: {type: 'string', default: ''}, //checked, unchecked
+    color: {type: 'string', default: ''}, //chainbow, chain, ss, b, polarity
+    nb: {type: 'string', default: 'nb_sphere'}, //nb_sphere, nb_cross
+    cell: {type: 'boolean', default: false}, //checked, unchecked
+    biomt: {type: 'boolean', default: true}, //checked, unchecked
+    packing: {type: 'boolean', default: true}, //checked, unchecked
+    symopHetatms: {type: 'boolean', default: true} //checked, unchecked
+  },
+
+  /**
+   * Set if component needs multiple instancing.
+   */
+  multiple: true,
+
+  /**
+   * Called once when component is attached. Generally for initial setup.
+   */
+  init: function () {
+    var data = this.data;
+    var el = this.el;
+
+    // Create geometry.
+
+    var glmol= new __WEBPACK_IMPORTED_MODULE_0_Lib_GLmol__["a" /* GLmol */](data);
+    //glmol.drawHETATM(data.hetatm);
+    // glmol.defineRepresentation()
+    // Set mesh on entity.
+
+
+    el.setObject3D('mesh',  glmol.returnModelGroup() );
+  },
+
+  /**
+   * Called when component is attached and when component data changes.
+   * Generally modifies the entity based on the data.
+   */
+  update: function (oldData) { },
+
+  /**
+   * Called when a component is removed (e.g., via removeAttribute).
+   * Generally undoes all modifications to the entity.
+   */
+  remove: function () { },
+
+  /**
+   * Called on each scene tick.
+   */
+  // tick: function (t) { },
+
+  /**
+   * Called when entity pauses.
+   * Use to stop or remove any dynamic or background behavior such as events.
+   */
+  pause: function () { },
+
+  /**
+   * Called when entity resumes.
+   * Use to continue or add any dynamic or background behavior such as events.
+   */
+  play: function () { }
+});
+
+
+/***/ })
+/******/ ]);
