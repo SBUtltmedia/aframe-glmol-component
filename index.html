@@ -18,17 +18,17 @@ AFRAME.registerComponent('glmol', {
     depth: {type: 'number', default: 1},
     color: {type: 'color', default: '#AAA'},
     molId: {type: 'string', default: 'pdb:2POR'},
-    hetatmMode: {type: 'string', default: ''}, //stick, ballAndStick, ballAndStick2, sphere, icosahedron, line
-    mainchain: {type: 'string', default: 'ribbon'}, //thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds
-    doNotSmoothen: {type: 'boolean', default: false}, //checked, unchecked
-    base: {type: 'string', default: 'nuclLine'}, //nuclStick, nuclLine, nuclPolygon
-    line: {type: 'string', default: ''}, //checked, unchecked
-    color: {type: 'string', default: ''}, //chainbow, chain, ss, b, polarity
-    nb: {type: 'string', default: 'nb_sphere'}, //nb_sphere, nb_cross
-    cell: {type: 'boolean', default: false}, //checked, unchecked
-    biomt: {type: 'boolean', default: true}, //checked, unchecked
-    packing: {type: 'boolean', default: false}, //checked, unchecked
-    symopHetatms: {type: 'boolean', default: true} //checked, unchecked
+    color: {type: 'string', default: 'chainbow'}, //Color by: chainbow, chain, ss, b, polarity
+    mainchain: {type: 'string', default: 'ribbon'}, //Main chain as: thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds, none
+    base: {type: 'string', default: 'nuclLine'}, //Nucleic acid bases as: nuclStick, nuclLine, nuclPolygon
+    line: {type: 'boolean', default: false}, //Side chains as lines: true, false
+    doNotSmoothen: {type: 'boolean', default: true}, //Don't smooth beta-sheets in ribbons: true, false
+    nb: {type: 'string', default: 'none'}, //Non-bonded atoms as: nb_sphere, nb_cross, none
+    hetatmMode: {type: 'string', default: 'none'}, //Small molecules (HETATMS) as: stick, ballAndStick, ballAndStick2, sphere, icosahedron, line, none
+    cell: {type: 'boolean', default: false}, //Unit cell: true, false
+    biomt: {type: 'boolean', default: false}, //Biological assembly: true, false
+    packing: {type: 'boolean', default: false}, //Crystal packing: true, false
+    symopHetatms: {type: 'boolean', default: false} //Show HETATMS in symmetry mates: true, false
   },
 
   /**

@@ -1725,10 +1725,11 @@ var GLmol = ( function() {
             }
         };
 
-        GLmol.prototype.drawSymmetryMates2 = function(group, asu, matrices) {
+        GLmol.prototype.drawSymmetryMates2 = function(group, matrices) {
+            var symmetryMate = new THREE.Object3D();//was asu
             if (matrices == undefined)
                 return;
-            asu.matrixAutoUpdate = false;
+            symmetryMate.matrixAutoUpdate = false;//was asu
 
             var cnt = 1;
             this.protein.appliedMatrix = new THREE.Matrix4();
@@ -1737,7 +1738,7 @@ var GLmol = ( function() {
                 if (mat == undefined || mat.isIdentity())
                     continue;
 
-                var symmetryMate = THREE.SceneUtils.cloneObject(asu);
+                //var symmetryMate = THREE.SceneUtils.cloneObject(asu);
                 symmetryMate.matrix = mat;
                 group.add(symmetryMate);
                 for (var j = 0; j < 16; j++)
@@ -1829,7 +1830,7 @@ var GLmol = ( function() {
         }
 
         GLmol.prototype.drawLine = function (line) {
-          if (line == 'checked') {
+          if (line) {
             var all = this.getAllAtoms();
             this.drawBondsAsLine(this.modelGroup, this.getSidechains(all), this.lineWidth);
           }
@@ -1873,7 +1874,7 @@ var GLmol = ( function() {
         }
         GLmol.prototype.drawBiomt = function (biomtMode) {
           if(biomtMode){
-            this.drawSymmetryMates2(this.modelGroup, asu, this.protein.biomtMatrices);
+            this.drawSymmetryMates2(this.modelGroup, this.protein.biomtMatrices);
           }
         }
         GLmol.prototype.drawPacking = function (packingMode) {
