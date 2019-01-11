@@ -156,7 +156,7 @@ var GLmol = ( function() {
               var  uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
             } else if (query.substr(0, 4) == 'cid:') {
                 query = query.substr(4);
-                if (!query.match(/^[1-9]+$/)) {
+                if (!query.match(/^[1-9]+[0-9]*$/)) {
                     alert("Wrong Compound ID");
                     return;
                 }
@@ -165,6 +165,7 @@ var GLmol = ( function() {
 
 
             fetch(uri).then( function(ret){
+              //  console.log(ret)
               ret.text().then(function(text){
                 _this.loadMoleculeStr(text);
               })
@@ -467,13 +468,13 @@ var GLmol = ( function() {
                 var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
                 group.add(sphere);
                 var r = (!forceDefault && this.vdwRadii[atom.elem] != undefined) ? this.vdwRadii[atom.elem] : defaultRadius;
+                //console.log('AAAAAAA');
                 if (!forceDefault && scale)
                     r *= scale;
                 sphere.scale.x = sphere.scale.y = sphere.scale.z = r;
                 sphere.position.x = atom.x;
                 sphere.position.y = atom.y;
                 sphere.position.z = atom.z;
-                //console.log(atom.x)
             }
         };
 
@@ -489,6 +490,7 @@ var GLmol = ( function() {
                     color : atom.color
                 });
                 var sphere = new THREE.Mesh(geo, mat);
+                console.log('THIS IS DEFAULT: ' + defaultRadius)
                 sphere.scale.x = sphere.scale.y = sphere.scale.z = (!forceDefault && this.vdwRadii[atom.elem] != undefined) ? this.vdwRadii[atom.elem] : defaultRadius;
                 group.add(sphere);
                 sphere.position.x = atom.x;
@@ -538,9 +540,9 @@ var GLmol = ( function() {
                 this.drawCylinder(group, p2, mp, bondR, atom2.color);
             }
             if (order > 1) {
-                tmp = mp.clone().addSelf(delta);
-                this.drawCylinder(group, p1.clone().addSelf(delta), tmp, bondR, atom1.color);
-                this.drawCylinder(group, p2.clone().addSelf(delta), tmp, bondR, atom2.color);
+                tmp = mp.clone().add(delta);
+                this.drawCylinder(group, p1.clone().add(delta), tmp, bondR, atom1.color);
+                this.drawCylinder(group, p2.clone().add(delta), tmp, bondR, atom2.color);
                 tmp = mp.clone().sub(delta);
                 this.drawCylinder(group, p1.clone().subf(delta), tmp, bondR, atom1.color);
                 this.drawCylinder(group, p2.clone().sub(delta), tmp, bondR, atom2.color);
@@ -585,6 +587,7 @@ var GLmol = ( function() {
                 if (atom1.connected)
                     forSpheres.push(i);
             }
+            console.log('THIS IS ATTOMR: ' + atomR);
             this.drawAtomsAsSphere(group, forSpheres, atomR, !scale, scale);
         };
 
@@ -1669,7 +1672,7 @@ var GLmol = ( function() {
                 if (atom == undefined)
                     continue;
 
-                c = residueColors[atom.resn]
+                var c = residueColors[atom.resn]
                 if (c != undefined)
                     atom.color = c;
             }
@@ -1748,11 +1751,12 @@ var GLmol = ( function() {
             this.protein.appliedMatrix.multiplyScalar(cnt);
         };
 
-        GLmol.prototype.drawSymmetryMatesWithTranslation2 = function(group, asu, matrices) {
+        GLmol.prototype.drawSymmetryMatesWithTranslation2 = function(group, matrices) {
             if (matrices == undefined)
                 return;
             var p = this.protein;
-            asu.matrixAutoUpdate = false;
+            var symmetryMate = new THREE.Object3D();//added
+            symmetryMate.matrixAutoUpdate = false;//was asu
 
             for (var i = 0; i < matrices.length; i++) {
                 var mat = matrices[i];
@@ -1763,10 +1767,10 @@ var GLmol = ( function() {
                     for (var b = -1; b <= 0; b++) {
                         for (var c = -1; c <= 0; c++) {
                             var translationMat = new THREE.Matrix4().makeTranslation(p.ax * a + p.bx * b + p.cx * c, p.ay * a + p.by * b + p.cy * c, p.az * a + p.bz * b + p.cz * c);
-                            var symop = mat.clone().multiplySelf(translationMat);
+                            var symop = mat.clone().multiply(translationMat);
                             if (symop.isIdentity())
                                 continue;
-                            var symmetryMate = THREE.SceneUtils.cloneObject(asu);
+                            //var symmetryMate = THREE.SceneUtils.cloneObject(asu);
                             symmetryMate.matrix = symop;
                             group.add(symmetryMate);
                         }
@@ -1793,7 +1797,6 @@ var GLmol = ( function() {
         GLmol.prototype.drawMainchain =  function(asu, mainchainMode, doNotSmoothen){
           //var asu = new THREE.Object3D();
           var all = this.getAllAtoms();
-          console.log(this);
                     if (mainchainMode == 'ribbon') {
                         this.drawCartoon(asu, all, doNotSmoothen);
                         this.drawCartoonNucleicAcid(asu, all);
@@ -1839,7 +1842,6 @@ var GLmol = ( function() {
         GLmol.prototype.drawNB = function (target, nbMode, symopHetatms) {
           //var asu = new THREE.Object3D();
           //target = symopHetatms ? asu : this.modelGroup;
-          console.log(nbMode);
           var allHet = this.getHetatms(this.getAllAtoms());
           var nonBonded = this.getNonbonded(allHet);
           if (nbMode == 'nb_sphere') {
@@ -1855,11 +1857,11 @@ var GLmol = ( function() {
                     if (hetatmMode == 'stick') {
                       this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius, true);
                   } else if (hetatmMode == 'sphere') {
-                      this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius);
+                      this.drawAtomsAsSphere(this.modelGroup, /*atomlist, defaultRadius*/hetatm, this.sphereRadius);
                   } else if (hetatmMode == 'line') {
                       this.drawBondsAsLine(this.modelGroup, hetatm, this.curveWidth);
                   } else if (hetatmMode == 'icosahedron') {
-                      this.drawAtomsAsIcosahedron(this.modelGroup, hetatm, this.sphereRadius);
+                      this.drawAtomsAsIcosahedron(this.modelGroup, hetatm, 0.3, this.sphereRadius);
                   } else if (hetatmMode == 'ballAndStick') {
                       this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius / 2.0, this.cylinderRadius, true, false, 0.3);
                   } else if (hetatmMode == 'ballAndStick2') {
@@ -1890,7 +1892,6 @@ var GLmol = ( function() {
             var all = this.getAllAtoms();
             var hetatm = this.removeSolvents(this.getHetatms(all));
             var schema = this.schema;
-            console.log(this.schema);
             this.colorByAtom(all, {});
             this.colorByChain(all);
             this.getChain(all, this.protein.biomtChains);
@@ -1909,13 +1910,12 @@ var GLmol = ( function() {
             //this.drawCartoon(this.modelGroup, all, this.curveWidth);
              var boundingBox = new THREE.Box3();
              boundingBox.setFromObject( this.modelGroup );
-
+             console.log('THIS IS A MATH VALUE: ' + boundingBox.max.y)
             var largestSideLength= Math.max(boundingBox.max.x-boundingBox.min.x,Math.max(boundingBox.max.y-boundingBox.min.y,Math.max(boundingBox.max.z-boundingBox.min.z)))
-             console.log(largestSideLength)
-             this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
+            console.log('THIS IS LARGEST SIDE: ' + largestSideLength)
+            this.modelGroup.scale.set(1/largestSideLength,1/largestSideLength,1/largestSideLength);
              boundingBox.setFromObject( this.modelGroup );
         var center = boundingBox.getCenter().x;
-                    console.log(center)
              this.modelGroup.position.x += -(boundingBox.getCenter().x);
              this.modelGroup.position.y += -(boundingBox.getCenter().y);
              this.modelGroup.position.z += -(boundingBox.getCenter().z);

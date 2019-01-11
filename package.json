@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "A port of GLMol based on https://github.com/alexmasselot/GLmol",
   "main": "./index.js",
-  "entry": ["./index.js","src/js/GLmol.js"],
+  "entry": [
+    "./index.js",
+    "src/js/GLmol.js"
+  ],
   "unpkg": "dist/aframe-glmol-component.min.js",
   "scripts": {
     "build": "webpack index.js  dist/aframe-glmol-component.js",
-    "dev": "budo index.js:dist/aframe-glmol-component.min.js --port 7000 --live --open",
+    "dev": "nodemon --watch index.js  --watch src --exec 'npm run dist'",
     "dist": "npm run build && uglifyjs dist/aframe-glmol-component.js > dist/aframe-glmol-component.min.js",
     "lint": "semistandard -v | snazzy",
     "prepublish": "npm run dist",
@@ -52,12 +55,13 @@
     "karma-mocha-reporter": "^1.1.3",
     "karma-sinon-chai": "^1.1.0",
     "mocha": "^2.3.4",
+    "nodemon": "^1.18.9",
     "randomcolor": "^0.4.4",
     "semistandard": "^8.0.0",
     "shelljs": "^0.7.0",
+    "shx": "^0.1.1",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
-    "shx": "^0.1.1",
     "snazzy": "^4.0.0",
     "uglify-es": "github:mishoo/UglifyJS2#harmony",
     "webpack": "^2.7.0"
