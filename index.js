@@ -16,7 +16,7 @@ AFRAME.registerComponent('glmol', {
     height: {type: 'number', default: 20},
     depth: {type: 'number', default: 1},
     color: {type: 'color', default: '#AAA'},
-    molId: {type: 'string', default: 'cid:9581011'},
+    molId: {type: 'string', default: 'pdb:2POR'},
     color: {type: 'string', default: 'chainbow'}, //Color by: chainbow, chain, ss, b, polarity
     mainchain: {type: 'string', default: 'thickRibbon'}, //Main chain as: thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds, none
     base: {type: 'string', default: 'nuclLine'}, //Nucleic acid bases as: nuclStick, nuclLine, nuclPolygon
@@ -44,13 +44,9 @@ AFRAME.registerComponent('glmol', {
 
     // Create geometry.
 
-    this.glmol= new GLmol(data);
-    //glmol.drawHETATM(data.hetatm);
-    // glmol.defineRepresentation()
-    // Set mesh on entity.
 
 
-    el.setObject3D('mesh',  this.glmol.returnModelGroup() );
+
   },
 
   /**
@@ -61,12 +57,18 @@ AFRAME.registerComponent('glmol', {
     // this.glmol.defineRepresentation()// = defineRepFromController;
     // this.glmol.rebuildScene();
     // this.glmol.show();
-
     //This is not ideal, but it works for now.
     var data = this.data;
     var el = this.el;
+    // this.glmol.defineRepresentation();
     this.glmol= new GLmol(data);
-    el.setObject3D('mesh',  this.glmol.returnModelGroup() );
+    //glmol.drawHETATM(data.hetatm);
+    // glmol.defineRepresentation()
+    // Set mesh on entity.
+  this.glmol.returnModelGroup().then(
+  (modelGroup)=>{
+    this.el.setObject3D('mesh', modelGroup  );
+  })
   },
 
   /**
