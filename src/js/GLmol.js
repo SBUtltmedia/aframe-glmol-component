@@ -165,7 +165,7 @@ var GLmol = (function() {
               alert("Wrong Compound ID");
               return;
             }
-            uri = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + query + "/SDF?record_type=3d";
+            uri = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + query + "/SDF?record_type=3d";
           }
 
 

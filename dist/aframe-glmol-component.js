@@ -239,7 +239,7 @@ var GLmol = (function() {
               alert("Wrong Compound ID");
               return;
             }
-            uri = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + query + "/SDF?record_type=3d";
+            uri = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + query + "/SDF?record_type=3d";
           }
 
 
@@ -2152,12 +2152,6 @@ AFRAME.registerComponent('glmol', {
   init: function () {
     var data = this.data;
     var el = this.el;
-
-    // Create geometry.
-
-
-
-
   },
 
   /**
@@ -2165,16 +2159,7 @@ AFRAME.registerComponent('glmol', {
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
-    // this.glmol.defineRepresentation()// = defineRepFromController;
-    // this.glmol.rebuildScene();
-    // this.glmol.show();
-    //This is not ideal, but it works for now.
-    var data = this.data;
-    var el = this.el;
-    // this.glmol.defineRepresentation();
-    this.glmol= new __WEBPACK_IMPORTED_MODULE_0_Lib_GLmol__["a" /* GLmol */](data);
-    //glmol.drawHETATM(data.hetatm);
-    // glmol.defineRepresentation()
+    this.glmol= new __WEBPACK_IMPORTED_MODULE_0_Lib_GLmol__["a" /* GLmol */](this.data);
     // Set mesh on entity.
   this.glmol.returnModelGroup().then(
   (modelGroup)=>{

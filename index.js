@@ -41,12 +41,6 @@ AFRAME.registerComponent('glmol', {
   init: function () {
     var data = this.data;
     var el = this.el;
-
-    // Create geometry.
-
-
-
-
   },
 
   /**
@@ -54,16 +48,7 @@ AFRAME.registerComponent('glmol', {
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
-    // this.glmol.defineRepresentation()// = defineRepFromController;
-    // this.glmol.rebuildScene();
-    // this.glmol.show();
-    //This is not ideal, but it works for now.
-    var data = this.data;
-    var el = this.el;
-    // this.glmol.defineRepresentation();
-    this.glmol= new GLmol(data);
-    //glmol.drawHETATM(data.hetatm);
-    // glmol.defineRepresentation()
+    this.glmol= new GLmol(this.data);
     // Set mesh on entity.
   this.glmol.returnModelGroup().then(
   (modelGroup)=>{
