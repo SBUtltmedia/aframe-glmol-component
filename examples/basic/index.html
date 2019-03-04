@@ -7,16 +7,122 @@
   <meta name="description" content="Basic example for GLMol  component.">
   </meta>
   <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="../../dist/aframe-glmol-component.min.js"></script>
   <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
   <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
 </head>
+<style type="text/css">
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+    }
 
+    body {
+      overflow: hidden;
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      border: 1px solid white;
+      background-color: black;
+      color: white;
+    }
+
+    option {
+      background-color: black;
+      color: white;
+    }
+
+    a {
+      color: white;
+    }
+
+    #glmol01 {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      position: absolute;
+    }
+
+    .settings {
+      position: absolute;
+      right: 0px;
+      top: 10%;
+      background-color: grey;
+      -moz-transform: rotate(-90deg);
+      -webkit-transform: rotate(-90deg);
+      margin: 0px;
+      padding: 10px;
+      -moz-transform-origin: 110% 100%;
+      -webkit-transform-origin: 110% 100%;
+      -webkit-border-radius: 10px 10px 0px 0px;
+      -moz-border-radius: 10px 10px 0px 0px;
+    }
+
+    .controller {
+      position: absolute;
+      width: 0px;
+      right: 0px;
+      top: 10%;
+      background-color: rgba(0, 0, 0, 0.65);
+      color: white;
+    }
+
+    .tabBox {
+      position: absolute;
+      padding: 0px;
+      color: white;
+      bottom: 0px;
+      height: 60px;
+      width: 60%;
+      overflow: hidden;
+    }
+
+    .bottomTab {
+      background-color: black;
+      border: 1px solid white;
+      width: 50px;
+      color: white;
+      position: absolute;
+
+      top: 10px;
+      padding: 10px 10px 30px 10px;
+      -webkit-border-radius: 10px 10px 0px 0px;
+      -moz-border-radius: 10px 10px 0px 0px;
+    }
+
+    .insideTab {
+      border: 1px solid white;
+      /* border-top:5px solid white; */
+      overflow: hidden;
+      padding: 1%;
+      width: 80%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      margin: 70px 200px 0 0;
+    }
+
+    .tabBox p,
+    .tabBox h1,
+    .tabBox ul {
+      margin-left: 10px;
+      font-size: 90%;
+    }
+
+    .aframeBox {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 <body>
-  <a-scene>
-    <a-entity glmol></a-entity>
-    <a-entity id="camera" camera look-controls orbit-controls=" minDistance: .75; maxDistance: 1.5; initialPosition: 0 0 5"></a-entity>
+  <a-scene class="aframeBox" background="color: black">
+    <a-camera position="0 1.6 0" look-controls="enabled: false"></a-camera>
+    <a-entity id="glmolId" position="0 1.5 -1" rotation="0 0 0" orbit-controls glmol></a-entity>
   </a-scene>
 
   <!-- GitHub Corner. -->
@@ -29,6 +135,7 @@
         fill="currentColor" class="octo-body"></path>
     </svg>
   </a>
+
   <style>
     .github-corner:hover .octo-arm {
       animation: octocat-wave 560ms ease-in-out
@@ -62,7 +169,212 @@
       }
     }
   </style>
+  <div id="controlPanel">
+    <div class="tabBox" id="glmol01_infobox" style="left: 40%; z-index: 2;">
+      <span class="bottomTab">About</span>
+      <div class="insideTab">
+        <p>
+          GLmol -- Molecular Viewer on A-Frame/Socket.IO/Javascript
+          <br>
+          Version 1 (2019.02.1)
+        </p>
+        <p>
+          This program is written by
+          <!-- biochem_fan -->biochem_fan Bazal1, and Dave Graff, and released under LGPL. Please visit <a href="https://github.com/SBUtltmedia/aframe-websocket-component">our project page</a> for the details and source code distribution.
+        </p>
+        <p>
+          Comments and Suggestions are welcome. Please email SBUtltmedia.
+        </p>
+        <h1>How to use</h1>
+        <ul>
+          <li>
+            Rotate: left mouse button
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="tabBox" id="glmol01_srcbox" style="left: 10%; z-index:0;">
+      <span class="bottomTab">Load</span>
+      <div class="insideTab">
+        You can load PDB, SDF/MOL(MDL not SYBYL) or XYZ files
+        <br><br><br>
+        From the RCSB PDB server
+        PDBID:
+        <input id="glmol01_pdbid" value="2POR" size=4>
+        <button onClick="download('pdb:' + $('#glmol01_pdbid').val())">
+          Download
+        </button>
+        <br><br>
+        From the PubChem server
+        Compound ID(CID):
+        <input id="glmol01_cid" value="2244" size=4>
+        <button onClick="download('cid:' + $('#glmol01_cid').val())">
+          Download
+        </button>
+        <br><br>
+        From your local disk:
+        <input id="glmol01_file" type="file" size=1>
+        <button onClick="loadFile()">
+          Load from file
+        </button>
+        <br>(Don't worry, your file will not be uploaded)
+      </div>
+    </div>
+
+    <div class="tabBox" id="glmol01_viewbox" style="left: 25%; z-index:1;">
+      <div class="bottomTab">View</div>
+      <div class="insideTab">
+        Color by
+        <select id="glmol01_color">
+          <option selected="selected" value="chainbow">spectrum</option>
+          <option value="chain">chain</option>
+          <option value="ss">secondary structure</option>
+          <option value="b">B factor</option>
+          <option value="polarity">polar/nonpolar</option>
+        </select>
+        <br>
+        <input id="glmol01_showMainchain" type="checkbox" checked>
+        Main chain as
+        <select id="glmol01_mainchain">
+          <option selected="selected" value="thickRibbon">thick ribbon</option>
+          <option value="ribbon">thin ribbon(faster)</option>
+          <option value="strand">strand</option>
+          <option value="cylinderHelix">cylinder & plate</option>
+          <option value="chain">C alpha trace</option>
+          <option value="tube">B factor Tube</option>
+          <option value="bonds">bonds (everything)</option>
+        </select>
+        <br>
+        <input id="glmol01_showBases" type="checkbox" checked>
+        Nucleic acid bases as
+        <select id="glmol01_base">
+          <option value="nuclStick">sticks</option>
+          <option selected="selected" value="nuclLine">lines</option>
+          <option value="nuclPolygon">polygons</option>
+        </select>
+        <br>
+        <input id="glmol01_line" type="checkbox">
+        Side chains as lines
+        <br>
+        <input id="glmol01_doNotSmoothen" type="checkbox">
+        Don't smooth beta-sheets in ribbons
+        <br>
+        <input id="glmol01_showNonBonded" type="checkbox">
+        Non-bonded atoms (solvent/ions) as
+        <select id="glmol01_nb">
+          <option value="nb_sphere">spheres</option>
+          <option selected="selected" value="nb_cross">stars</option>
+        </select>
+        <br>
+        <input id="glmol01_showHetatms" type="checkbox" checked>
+        Small molecules(HETATMs) as
+        <select id="glmol01_hetatm">
+          <option value="stick">sticks</option>
+          <option value="ballAndStick">ball and stick</option>
+          <option value="ballAndStick2">ball and stick (multiple bond)</option>
+          <option selected="selected" value="sphere">spheres</option>
+          <option value="icosahedron">icosahedrons</option>
+          <option value="line">lines</option>
+        </select>
+        <br>
+        Multiple bond option is for SDF/MOL file ONLY.
+        <br>
+        <input id="glmol01_cell" type="checkbox">
+        Unit cell
+        <br>
+        <input id="glmol01_biomt" type="checkbox">
+        Biological assembly (the last one defined)
+        <br>
+        <input id="glmol01_packing" type="checkbox">
+        Crystal packing
+        <br>
+        <input id="glmol01_symopHetatms" type="checkbox">
+        Show HETATMs in symmetry mates (slower)
+        <br>
+        <br>
+        <button id="glmol01_reload">
+          Apply
+        </button>
+      </div>
+    </div>
+
+    <div id="glmol01_pdbTitle" style="position:absolute; color: white; background-color: rgba(0, 0, 0, 0.65); font-size:80%"></div>
+  </div>
   <!-- End GitHub Corner. -->
 </body>
+<script type="text/javascript">
+  var el = document.querySelector('#glmolId');
+
+  $('.bottomTab').click(function(evt) {
+    var height = 60;
+    var parentId = $(evt.currentTarget).parent().parent()[0].id
+    isBig = $(evt.currentTarget).parent().height() > height;
+    $(`#${parentId} .tabBox`).animate({
+      bottom: '0px',
+      height: `${height}px`
+    })
+    if (!isBig) {
+      $(evt.currentTarget).parent().animate({
+        bottom: '0px',
+        height: '400px'
+      });
+    }
+  })
+
+
+
+  $('#glmol01_reload').click(function(ev) {
+    var idHeader = "#glmol01_";
+    data = {
+      'color': $(idHeader + 'color').val(),
+      'mainchain': $(idHeader + 'showMainchain').is(':checked') ? $(idHeader + 'mainchain').val() : 'none',
+      'base': $(idHeader + 'showBases').is(':checked') ? $(idHeader + 'base').val() : 'none',
+      'line': $(idHeader + 'line').is(':checked'),
+      'doNotSmoothen': $(idHeader + 'doNotSmoothen').is(':checked'),
+      'nb': $(idHeader + 'showNonBonded').is(':checked') ? $(idHeader + 'nb').val() : 'none',
+      'hetatmMode': $(idHeader + 'showHetatms').is(':checked') ? $(idHeader + 'hetatm').val() : 'none',
+      'cell': $(idHeader + 'cell').is(':checked'),
+      'biomt': $(idHeader + 'biomt').is(':checked'),
+      'packing': $(idHeader + 'packing').is(':checked'),
+      'symopHetatms': $(idHeader + 'symopHetatms').is(':checked')
+    };
+
+    for (i in data) {
+      var currentAttribute = data[i];
+      el.setAttribute('glmol', i, currentAttribute);
+    }
+  });
+
+  function loadFile() {
+    var file = $('#glmol01_file').get(0);
+    if (file)
+      file = file.files;
+    if (!file || !window.FileReader || !file[0]) {
+      alert("No file is selected. Or File API is not supported in your browser. Please try Firefox or Chrome.");
+      return;
+    }
+    $('#loading').show();
+    var reader = new FileReader();
+    reader.onload = function() {
+      $('#glmol01_src').val(reader.result);
+      glmol01.loadMolecule();
+      $('#loading').hide();
+    };
+    reader.readAsText(file[0]);
+  }
+
+  function download(query) {
+    var el = document.querySelector('#glmolId');
+    data = {
+      'molId': query
+    };
+    el.setAttribute('glmol', data);
+  }
+
+  $('input[name=checkbox]').change(function() {
+    var el = document.querySelector('#glmolId');
+    el.setAttribute('websocket', data);
+  });
+</script>
 
 </html>

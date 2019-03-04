@@ -28,7 +28,7 @@ Install and use by directly including the [browser files](dist):
 
 <body>
   <a-scene>
-    <a-entity glmol="foo: bar"></a-entity>
+    <a-entity glmol></a-entity>
   </a-scene>
 </body>
 ```
