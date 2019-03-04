@@ -2,6 +2,9 @@
 
 [![Version](http://img.shields.io/npm/v/aframe-glmol-component.svg?style=flat-square)](https://npmjs.org/package/aframe-glmol-component)
 [![License](http://img.shields.io/npm/l/aframe-glmol-component.svg?style=flat-square)](https://npmjs.org/package/aframe-glmol-component)
+![](Aframe-GlMol-Example.gif)
+
+
 
 A port of GLMol based on https://github.com/alexmasselot/GLmol
 
