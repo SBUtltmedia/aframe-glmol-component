@@ -43,8 +43,8 @@ var GLmol = (function() {
         this.data=data;
       }
 
-        GLmol.prototype.create = function(data,resolve, reject) {
-          this.schema = data;
+        GLmol.prototype.create = function(resolve, reject) {
+          this.schema = this.data;
           this.Nucleotides = ['  G', '  A', '  T', '  C', '  U', ' DG', ' DA', ' DT', ' DC', ' DU'];
           this.ElementColors = {
             "H": 0xCCCCCC,
@@ -133,25 +133,24 @@ var GLmol = (function() {
           this.currentModelPos = 0;
           this.cz = 0;
 
-          this.download(this.schema.molId,resolve,reject)
+          this.download(resolve,reject)
 
         }
 
         GLmol.prototype.returnModelGroup = function() {
-          console.log(this)
           return new Promise((resolve, reject)=> {
 
-           this.create(this.data,resolve, reject)
-          });
+           this.create(resolve, reject)
+         });
           }
 
 
 
-        GLmol.prototype.download = function(query,resolve, reject) {
+        GLmol.prototype.download = function(resolve, reject) {
           var baseURL = '';
           var _this = this;
           var _resolve= resolve;
-          console.log(resolve)
+          var query = this.data.molId
           if (query.substr(0, 4) == 'pdb:') {
             query = query.substr(4).toUpperCase();
             if (!query.match(/^[1-9][A-Za-z0-9]{3}$/)) {

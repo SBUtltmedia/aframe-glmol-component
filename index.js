@@ -52,7 +52,7 @@ AFRAME.registerComponent('glmol', {
     // Set mesh on entity.
   this.glmol.returnModelGroup().then(
   (modelGroup)=>{
-    this.el.setObject3D('mesh', modelGroup  );
+    this.el.setObject3D('mesh', modelGroup));
   })
   },
 
