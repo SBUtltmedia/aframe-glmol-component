@@ -1334,9 +1334,9 @@ var GLmol = (function() {
             linewidth: 1,
             linejoin: false
           });
-          mat.linewidth = 1.5;
+          mat.linewidth = 2.5;
           mat.vertexColors = true;
-          var line = new THREE.Line(geo, mat, THREE.LineSegments);
+          var line = new THREE.LineSegments(geo, mat);
           group.add(line);
         };
 
