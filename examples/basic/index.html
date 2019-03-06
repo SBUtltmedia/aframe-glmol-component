@@ -179,8 +179,7 @@
           Version 1 (2019.02.1)
         </p>
         <p>
-          This program is written by
-          <!-- biochem_fan -->biochem_fan Bazal1, and Dave Graff, and released under LGPL. Please visit <a href="https://github.com/SBUtltmedia/aframe-websocket-component">our project page</a> for the details and source code distribution.
+          This program is written by biochem_fan, Bazal1, and Dave Graff, and released under LGPL. Please visit <a href="https://github.com/SBUtltmedia/aframe-websocket-component">our project page</a> for the details and source code distribution.
         </p>
         <p>
           Comments and Suggestions are welcome. Please email SBUtltmedia.
@@ -200,14 +199,14 @@
         <br><br><br>
         From the RCSB PDB server
         PDBID:
-        <input id="glmol01_pdbid" value="2POR" size=4>
+        <input class="txtbox" id="glmol01_pdb" value="2POR" size=4>
         <button onClick="download('pdb:' + $('#glmol01_pdbid').val())">
           Download
         </button>
         <br><br>
         From the PubChem server
         Compound ID(CID):
-        <input id="glmol01_cid" value="2244" size=4>
+        <input class="txtbox" id="glmol01_cid" value="2244" size=4>
         <button onClick="download('cid:' + $('#glmol01_cid').val())">
           Download
         </button>
@@ -319,8 +318,15 @@
         height: '400px'
       });
     }
-  })
+  });
 
+
+    $('.txtbox').keypress(function(event){
+      if(event.originalEvent.key == "Enter"){
+        mtype = $(this).attr("id").split("_")[1]
+        download(mtype + ":" + $(this).val());
+      }
+    });
 
 
   $('#glmol01_reload').click(function(ev) {
