@@ -13,118 +13,159 @@
   <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
 </head>
 <style type="text/css">
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 0px;
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  input,
+  select,
+  button,
+  textarea {
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+  }
+
+  option {
+    background-color: black;
+    color: white;
+  }
+
+  a {
+    color: white;
+  }
+
+  #glmol01 {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    position: absolute;
+  }
+
+  .settings {
+    position: absolute;
+    right: 0px;
+    top: 10%;
+    background-color: grey;
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    margin: 0px;
+    padding: 10px;
+    -moz-transform-origin: 110% 100%;
+    -webkit-transform-origin: 110% 100%;
+    -webkit-border-radius: 10px 10px 0px 0px;
+    -moz-border-radius: 10px 10px 0px 0px;
+  }
+
+  .controller {
+    position: absolute;
+    width: 0px;
+    right: 0px;
+    top: 10%;
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+  }
+
+  .tabBox {
+    position: absolute;
+    padding: 0px;
+    color: white;
+    bottom: 0px;
+    height: 60px;
+    width: 60%;
+    overflow: hidden;
+  }
+
+  .bottomTab {
+    background-color: black;
+    border: 1px solid white;
+    width: 50px;
+    color: white;
+    position: absolute;
+
+    top: 10px;
+    padding: 10px 10px 30px 10px;
+    -webkit-border-radius: 10px 10px 0px 0px;
+    -moz-border-radius: 10px 10px 0px 0px;
+  }
+
+  .insideTab {
+    border: 1px solid white;
+    /* border-top:5px solid white; */
+    overflow: hidden;
+    padding: 1%;
+    width: 80%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    margin: 70px 200px 0 0;
+  }
+
+  .tabBox p,
+  .tabBox h1,
+  .tabBox ul {
+    margin-left: 10px;
+    font-size: 90%;
+  }
+
+  .aframeBox {
+    height: 100%;
+    width: 100%;
+  }
+
+  #showMolId {
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
+
+  @keyframes octocat-wave {
+
+    0%,
+    100% {
+      transform: rotate(0)
     }
 
-    body {
-      overflow: hidden;
+    20%,
+    60% {
+      transform: rotate(-25deg)
     }
 
-    input,
-    select,
-    button,
-    textarea {
-      border: 1px solid white;
-      background-color: black;
-      color: white;
+    40%,
+    80% {
+      transform: rotate(10deg)
+    }
+  }
+
+  @media (max-width:500px) {
+    .github-corner:hover .octo-arm {
+      animation: none
     }
 
-    option {
-      background-color: black;
-      color: white;
+    .github-corner .octo-arm {
+      animation: octocat-wave 560ms ease-in-out
     }
+  }
+</style>
 
-    a {
-      color: white;
-    }
-
-    #glmol01 {
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      position: absolute;
-    }
-
-    .settings {
-      position: absolute;
-      right: 0px;
-      top: 10%;
-      background-color: grey;
-      -moz-transform: rotate(-90deg);
-      -webkit-transform: rotate(-90deg);
-      margin: 0px;
-      padding: 10px;
-      -moz-transform-origin: 110% 100%;
-      -webkit-transform-origin: 110% 100%;
-      -webkit-border-radius: 10px 10px 0px 0px;
-      -moz-border-radius: 10px 10px 0px 0px;
-    }
-
-    .controller {
-      position: absolute;
-      width: 0px;
-      right: 0px;
-      top: 10%;
-      background-color: rgba(0, 0, 0, 0.65);
-      color: white;
-    }
-
-    .tabBox {
-      position: absolute;
-      padding: 0px;
-      color: white;
-      bottom: 0px;
-      height: 60px;
-      width: 60%;
-      overflow: hidden;
-    }
-
-    .bottomTab {
-      background-color: black;
-      border: 1px solid white;
-      width: 50px;
-      color: white;
-      position: absolute;
-
-      top: 10px;
-      padding: 10px 10px 30px 10px;
-      -webkit-border-radius: 10px 10px 0px 0px;
-      -moz-border-radius: 10px 10px 0px 0px;
-    }
-
-    .insideTab {
-      border: 1px solid white;
-      /* border-top:5px solid white; */
-      overflow: hidden;
-      padding: 1%;
-      width: 80%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.85);
-      margin: 70px 200px 0 0;
-    }
-
-    .tabBox p,
-    .tabBox h1,
-    .tabBox ul {
-      margin-left: 10px;
-      font-size: 90%;
-    }
-
-    .aframeBox {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
 <body>
+
   <a-scene class="aframeBox" background="color: black">
     <a-camera position="0 1.6 0" look-controls="enabled: false"></a-camera>
     <a-entity id="glmolId" position="0 1.5 -1" rotation="0 0 0" orbit-controls glmol></a-entity>
   </a-scene>
-
+  <div id="showMolId"></div>
   <!-- GitHub Corner. -->
   <a href="https://github.com/SBUtltmedia/GLmol-A-Frame" class="github-corner">
     <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;">
@@ -135,40 +176,6 @@
         fill="currentColor" class="octo-body"></path>
     </svg>
   </a>
-
-  <style>
-    .github-corner:hover .octo-arm {
-      animation: octocat-wave 560ms ease-in-out
-    }
-
-    @keyframes octocat-wave {
-
-      0%,
-      100% {
-        transform: rotate(0)
-      }
-
-      20%,
-      60% {
-        transform: rotate(-25deg)
-      }
-
-      40%,
-      80% {
-        transform: rotate(10deg)
-      }
-    }
-
-    @media (max-width:500px) {
-      .github-corner:hover .octo-arm {
-        animation: none
-      }
-
-      .github-corner .octo-arm {
-        animation: octocat-wave 560ms ease-in-out
-      }
-    }
-  </style>
   <div id="controlPanel">
     <div class="tabBox" id="glmol01_infobox" style="left: 40%; z-index: 2;">
       <span class="bottomTab">About</span>
@@ -303,7 +310,9 @@
 </body>
 <script type="text/javascript">
   var el = document.querySelector('#glmolId');
-
+  document.querySelector('a-scene').addEventListener('loaded', () => {
+    showMolId(el.getAttribute('glmol').molId)
+  });
   $('.bottomTab').click(function(evt) {
     var height = 60;
     var parentId = $(evt.currentTarget).parent().parent()[0].id
@@ -321,12 +330,12 @@
   });
 
 
-    $('.txtbox').keypress(function(event){
-      if(event.originalEvent.key == "Enter"){
-        mtype = $(this).attr("id").split("_")[1]
-        download(mtype + ":" + $(this).val());
-      }
-    });
+  $('.txtbox').keypress(function(event) {
+    if (event.originalEvent.key == "Enter") {
+      mtype = $(this).attr("id").split("_")[1]
+      download(mtype + ":" + $(this).val());
+    }
+  });
 
 
   $('#glmol01_reload').click(function(ev) {
@@ -350,6 +359,10 @@
       el.setAttribute('glmol', i, currentAttribute);
     }
   });
+
+  function showMolId(molId) {
+    $('#showMolId').html(molId);
+  }
 
   function loadFile() {
     var file = $('#glmol01_file').get(0);
@@ -375,12 +388,8 @@
       'molId': query
     };
     el.setAttribute('glmol', data);
+    showMolId(query);
   }
-
-  $('input[name=checkbox]').change(function() {
-    var el = document.querySelector('#glmolId');
-    el.setAttribute('websocket', data);
-  });
 </script>
 
 </html>
