@@ -207,7 +207,7 @@
         From the RCSB PDB server
         PDBID:
         <input class="txtbox" id="glmol01_pdb" value="2POR" size=4>
-        <button onClick="download('pdb:' + $('#glmol01_pdbid').val())">
+        <button onClick="download('pdb:' + $('#glmol01_pdb').val())">
           Download
         </button>
         <br><br>
@@ -311,7 +311,7 @@
 <script type="text/javascript">
   var el = document.querySelector('#glmolId');
   document.querySelector('a-scene').addEventListener('loaded', () => {
-    showMolId(el.getAttribute('glmol').molId)
+    showMolId(el.getAttribute('glmol').molId);
   });
   $('.bottomTab').click(function(evt) {
     var height = 60;
@@ -388,7 +388,7 @@
       'molId': query
     };
     el.setAttribute('glmol', data);
-    showMolId(query);
+    showMolId(el.getAttribute('glmol').molId);
   }
 </script>
 
