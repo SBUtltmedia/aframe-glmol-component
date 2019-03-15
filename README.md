@@ -13,12 +13,23 @@ For [A-Frame](https://aframe.io).
 ### API
 
 | Property | Description | Default Value |
-| -------- | ---------------------------------- | ------------- |
-| width    | Width                              | 20            |
-| height   | Weight                             | 20            |
-| depth    | Depth                              | 1             |
-| color    | Color                              | #AAA          |
-| molId    | moleculeID from PDB or CID server  | pdb:2POR      |
+| ------------- | ---------------------------------------------------------------------------------------- | ----------- |
+| width         | Width                                                                                    | 20          |
+| height        | Weight                                                                                   | 20          |
+| depth         | Depth                                                                                    | 1           |
+| color         | Color                                                                                    | #AAA        |
+| molId         | moleculeID from PDB or CID server                                                        | pdb:2POR    |
+| color         | Color by: chainbow, chain, ss, b, polarity                                               | chainbow    |
+| mainchain     | Main chain as: thickRibbon, ribbon, strand, cylinderHelix, chain, tube, bonds, none      | thickRibbon |
+| base          | Nucleic acid bases as: nuclStick, nuclLine, nuclPolygon                                  | nuclLine    |
+| line          | Side chains as lines                                                                     | false       |
+| doNotSmoothen | Don't smooth beta-sheets in ribbons                                                      | true        |
+| nb            | Non-bonded atoms as: nb_sphere, nb_cross, none                                           | none        |
+| hetatmMode    | Small molecules as: stick, ballAndStick, ballAndStick2, sphere, icosahedron, line, none  | sphere      |
+| cell          | Unit cell                                                                                | false       |
+| biomt         | Biological assembly                                                                      | false       |
+| packing       | Crystal packing                                                                          | false       |
+| symopHetatms  | Show HETATMS in symmetry mates                                                           | false       |
 
 
 ### Installation
