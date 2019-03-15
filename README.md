@@ -6,7 +6,7 @@
 
 
 
-A port of GLMol based on https://github.com/alexmasselot/GLmol
+A port of GLMol based on https://github.com/biochem-fan/GLmol
 
 For [A-Frame](https://aframe.io).
 
