@@ -13,8 +13,13 @@ For [A-Frame](https://aframe.io).
 ### API
 
 | Property | Description | Default Value |
-| -------- | ----------- | ------------- |
-|          |             |               |
+| -------- | ---------------------------------- | ------------- |
+| width    | Width                              | 20            |
+| height   | Weight                             | 20            |
+| depth    | Depth                              | 1             |
+| color    | Color                              | #AAA          |
+| molId    | moleculeID from PDB or CID server  | pdb:2POR      |
+
 
 ### Installation
 
