@@ -157,7 +157,7 @@ var GLmol = (function() {
               alert("Wrong PDB ID");
               return;
             }
-            var uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
+            var uri = "https://www.pdb.org/pdb/files/" + query + ".pdb";
           } else if (query.substr(0, 4) == 'cid:') {
             query = query.substr(4);
             if (!query.match(/^[1-9]+[0-9]*$/)) {

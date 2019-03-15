@@ -231,7 +231,7 @@ var GLmol = (function() {
               alert("Wrong PDB ID");
               return;
             }
-            var uri = "http://www.pdb.org/pdb/files/" + query + ".pdb";
+            var uri = "https://www.pdb.org/pdb/files/" + query + ".pdb";
           } else if (query.substr(0, 4) == 'cid:') {
             query = query.substr(4);
             if (!query.match(/^[1-9]+[0-9]*$/)) {
@@ -2043,9 +2043,7 @@ var GLmol = (function() {
           //this.drawCartoon(this.modelGroup, all, this.curveWidth);
           var boundingBox = new THREE.Box3();
           boundingBox.setFromObject(this.modelGroup);
-          console.log('THIS IS A MATH VALUE: ' + boundingBox.max.y)
           var largestSideLength = Math.max(boundingBox.max.x - boundingBox.min.x, Math.max(boundingBox.max.y - boundingBox.min.y, Math.max(boundingBox.max.z - boundingBox.min.z)))
-          console.log('THIS IS LARGEST SIDE: ' + largestSideLength)
           this.modelGroup.scale.set(1 / largestSideLength, 1 / largestSideLength, 1 / largestSideLength);
           boundingBox.setFromObject(this.modelGroup);
           var center = new THREE.Vector3();
