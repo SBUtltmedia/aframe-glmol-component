@@ -50,19 +50,5 @@ Install and use by directly including the [browser files](dist):
     <a-entity glmol></a-entity>
   </a-scene>
 </body>
-```
 
-#### npm
 
-Install via npm:
-
-```bash
-npm install aframe-glmol-component
-```
-
-Then require and use.
-
-```js
-require('aframe');
-require('aframe-glmol-component');
-```
