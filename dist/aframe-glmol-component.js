@@ -2044,29 +2044,33 @@ var GLmol = (function() {
           this.drawCell(schema.cell);
           this.drawBiomt(schema.biomt);
           this.drawPacking(schema.packing);
-          //  if(schema.hetatm=="sphere")this.drawAtomsAsSphere(this.modelGroup, hetatm, this.sphereRadius/5);
-          //this.drawBondsAsStick(this.modelGroup, hetatm, this.cylinderRadius, this.cylinderRadius);
-          //this.drawMainchainCurve(this.modelGroup, all, this.curveWidth, 'P');
-          //this.drawCartoon(this.modelGroup, all, this.curveWidth);
-          var boundingBox = new THREE.Box3();
-          boundingBox.setFromObject(this.modelGroup);
-          var largestSideLength = Math.max(boundingBox.max.x - boundingBox.min.x, Math.max(boundingBox.max.y - boundingBox.min.y, Math.max(boundingBox.max.z - boundingBox.min.z)))
-          this.modelGroup.scale.set(1 / largestSideLength, 1 / largestSideLength, 1 / largestSideLength);
-          boundingBox.setFromObject(this.modelGroup);
-          var center = new THREE.Vector3();
-          this.modelGroup.position.x += -(boundingBox.getCenter(center).x);
-          this.modelGroup.position.y += -(boundingBox.getCenter(center).y);
-          this.modelGroup.position.z += -(boundingBox.getCenter(center).z);
-          //   this.modelGroup.translateX(-center.x);
-          //     this.modelGroup.updateMatrix()
-          //   //this.modelGroup.translateY(center.y);
-          //   //  this.modelGroup.updateMatrix()
-          // //  this.modelGroup.translateZ(center.z);
-          // //  this.modelGroup.updateMatrix()
-          //   boundingBox.setFromObject( this.modelGroup );
-          //   var center = boundingBox.getCenter();
 
-          //  console.log(center)
+
+
+
+
+
+          //var boundingBox = new THREE.Box3();
+          var children= this.modelGroup.children.filter((child)=>child.type=="Mesh");
+        //  var newContainer = new THREE.Object3D().add(...children);
+          var boundingBox = new THREE.Box3().setFromObject(...children);
+          var helper = new THREE.BoxHelper(...children);
+
+          //
+          //
+          //
+          // console.log(helper)
+
+          this.largestSideLength = helper.geometry.boundingSphere.radius*5;
+
+
+
+          this.modelGroup.position.x -= helper.geometry.boundingSphere.center.x;
+          this.modelGroup.position.y -= helper.geometry.boundingSphere.center.y;
+          this.modelGroup.position.z -= helper.geometry.boundingSphere.center.z;
+//  this.modelGroup.scale.set(.1, .1 ,.1);
+
+
         };
 
         GLmol.prototype.loadMoleculeStr = function(source) {
@@ -2127,8 +2131,8 @@ if (typeof AFRAME === 'undefined') {
  */
 AFRAME.registerComponent('glmol', {
   schema: {
-    width: {type: 'number', default: 20},
-    height: {type: 'number', default: 20},
+    width: {type: 'number', default: 1},
+    height: {type: 'number', default: 1},
     depth: {type: 'number', default: 1},
     color: {type: 'color', default: '#AAA'},
     molId: {type: 'string', default: 'pdb:2POR'},
@@ -2165,10 +2169,13 @@ AFRAME.registerComponent('glmol', {
   update: function (oldData) {
     this.glmol= new __WEBPACK_IMPORTED_MODULE_0_Lib_GLmol__["a" /* GLmol */](this.data);
     // Set mesh on entity.
-        console.log(this.data)
+
   this.glmol.returnModelGroup().then(
   (modelGroup)=>{
     this.el.setObject3D('mesh', modelGroup);
+
+this.el.setAttribute('scale', `${1/this.glmol.largestSideLength} ${1/this.glmol.largestSideLength} ${1/this.glmol.largestSideLength}`);
+
   })
   },
 
