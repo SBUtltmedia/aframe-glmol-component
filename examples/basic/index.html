@@ -162,8 +162,8 @@
 <body>
 
   <a-scene class="aframeBox" background="color: black">
-    <a-camera position="0 1.6 0" look-controls="enabled: false"></a-camera>
-    <a-entity id="glmolId" position="0 0 0" rotation="0 0 0"  glmol></a-entity>
+    <a-entity glmol id="glmol"></a-entity>
+      <a-entity id="camera" camera look-controls orbit-controls=" minDistance: .75; maxDistance: 15.5; initialPosition: 0 0 5"></a-entity>
   </a-scene>
   <div id="showMolId"></div>
   <!-- GitHub Corner. -->
