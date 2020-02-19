@@ -41,6 +41,7 @@ var GLmol = (function() {
 
       function GLmol(data) {
         this.data=data;
+
       }
 
         GLmol.prototype.create = function(resolve, reject) {
@@ -1016,8 +1017,14 @@ var GLmol = (function() {
             vs.push(vs[vsize + i * 2])
           };
           vsize += 8;
-          fs.push(new THREE.Face4(vsize, vsize + 2, vsize + 6, vsize + 4, undefined, fs[0].color));
-          fs.push(new THREE.Face4(vsize + 1, vsize + 5, vsize + 7, vsize + 3, undefined, fs[fs.length - 3].color));
+          var verts1= [vsize, vsize + 2, vsize + 6, vsize + 4]
+          var verts2= [vsize + 1, vsize + 5, vsize + 7, vsize + 3]
+          fs.push(new THREE.Face3(verts1[0], verts1[1], verts1[2], undefined, fs[0].color));
+          fs.push(new THREE.Face3(verts1[0], verts1[2], verts1[3], undefined, fs[0].color));
+          fs.push(new THREE.Face3(verts2[0], verts2[1], verts2[2], undefined, fs[fs.length - 3].color));
+          fs.push(new THREE.Face3(verts2[0], verts2[2], verts2[3], undefined, fs[fs.length - 3].color));
+          // fs.push(new THREE.Face4(vsize, vsize + 2, vsize + 6, vsize + 4, undefined, fs[0].color));
+          // fs.push(new THREE.Face4(vsize + 1, vsize + 5, vsize + 7, vsize + 3, undefined, fs[fs.length - 3].color));
           geo.computeFaceNormals();
           geo.computeVertexNormals(false);
           var material = new THREE.MeshLambertMaterial();

@@ -50,6 +50,7 @@ AFRAME.registerComponent('glmol', {
   update: function (oldData) {
     this.glmol= new GLmol(this.data);
     // Set mesh on entity.
+        console.log(this.data)
   this.glmol.returnModelGroup().then(
   (modelGroup)=>{
     this.el.setObject3D('mesh', modelGroup);
