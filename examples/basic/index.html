@@ -309,7 +309,7 @@
   <!-- End GitHub Corner. -->
 </body>
 <script type="text/javascript">
-  var el = document.querySelector('#glmolId');
+  var el = document.querySelector('#glmol');
   document.querySelector('a-scene').addEventListener('loaded', () => {
     showMolId(el.getAttribute('glmol').molId);
   });
@@ -383,7 +383,7 @@
   }
 
   function download(query) {
-    var el = document.querySelector('#glmolId');
+  
     data = {
       'molId': query
     };

@@ -6,13 +6,7 @@ License: dual license of MIT or LGPL3
 Contributors:
 Robert Hanson for parseXYZ, deferred instantiation
 
-This program uses
-Three.js
-https://github.com/mrdoob/three.js
-Copyright (c) 2010-2012 three.js Authors. All rights reserved.
-jQuery
-http://jquery.org/
-Copyright (c) 2011 John Resig
+
 */
 
 // Workaround for Intel GMA series (gl_FrontFacing causes compilation error)
@@ -126,7 +120,7 @@ var GLmol = (function() {
           this.coilWidth = 0.3;
           this.helixSheetWidth = 1.3;
           this.nucleicAcidWidth = 0.8;
-          this.thickness = 0.4;
+          this.thickness = 1.4;
 
           // UI variables
           this.cq = new THREE.Quaternion(1, 0, 0, 0);
