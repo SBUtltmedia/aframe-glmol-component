@@ -58,7 +58,7 @@
     "nodemon": "^1.18.9",
     "randomcolor": "^0.4.4",
     "semistandard": "^8.0.0",
-    "shelljs": "^0.7.0",
+    "shelljs": "^0.8.5",
     "shx": "^0.1.1",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
